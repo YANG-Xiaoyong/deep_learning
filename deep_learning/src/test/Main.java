@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deeplearning.DeepNetworks;
+import org.deeplearning.layer.AbstractHiddenLayer;
+import org.deeplearning.layer.LinearLayer;
+import org.deeplearning.lossfun.MseLossFunImpl;
 import org.ujmp.core.Matrix;
 import org.ujmp.core.calculation.Calculation.Ret;
-
-import entity.DeepNetworks;
-import entity.HiddenLayer;
-import entity.LineLayer;
-import service.impl.MseLossFunImpl;
 
 public class Main {
 
@@ -25,11 +24,11 @@ public class Main {
 	    //设置测试集
 	    mseLossFun.setTestSet(y);
 	    //设置神经网络层
-	    List<HiddenLayer> lineLayers = new ArrayList<>();
-	    lineLayers.add(new LineLayer());
-	    lineLayers.add(new LineLayer());
-	    lineLayers.add(new LineLayer());
-	    lineLayers.add(new LineLayer());
+	    List<AbstractHiddenLayer> lineLayers = new ArrayList<>();
+	    lineLayers.add(new LinearLayer());
+	    lineLayers.add(new LinearLayer());
+	    lineLayers.add(new LinearLayer());
+	    lineLayers.add(new LinearLayer());
 	    deepNetworks.setHiddenLayers(lineLayers);
 	    //设置损失函数
 	    deepNetworks.setLossFun(mseLossFun);

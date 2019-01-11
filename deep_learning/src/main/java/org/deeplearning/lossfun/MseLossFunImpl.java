@@ -1,8 +1,6 @@
-package service.impl;
+package org.deeplearning.lossfun;
 
 import org.ujmp.core.Matrix;
-
-import service.LossFun;
 
 /**
  * 均方误差

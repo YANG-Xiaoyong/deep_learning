@@ -1,4 +1,4 @@
-package service;
+package org.deeplearning.lossfun;
 
 public interface LossFun<T> {
 	

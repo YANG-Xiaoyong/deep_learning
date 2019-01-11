@@ -1,9 +1,9 @@
-package entity;
+package org.deeplearning.layer;
 
 import org.ujmp.core.Matrix;
 import org.ujmp.core.calculation.Calculation.Ret;
 
-public class LineLayer extends HiddenLayer {
+public class LinearLayer extends AbstractHiddenLayer {
 	
 	/**
 	 * m by n Matrix
@@ -32,7 +32,7 @@ public class LineLayer extends HiddenLayer {
 	 * @param cols
 	 * @return
 	 */
-	public LineLayer setWbRandom(long rows, long cols) {
+	public LinearLayer setWbRandom(long rows, long cols) {
 		if(this.w == null) {
 			this.w = Matrix.Factory.ones(rows, cols);
 			this.w.randn(Ret.ORIG);
