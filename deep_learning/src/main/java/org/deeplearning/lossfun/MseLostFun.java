@@ -7,7 +7,7 @@ import org.ujmp.core.Matrix;
  * @author yangxy
  *
  */
-public class MseLossFunImpl implements LossFun<Double> {
+public class MseLostFun extends AbstractLostFun {
 	
 	/**
 	 * 阈值
@@ -75,10 +75,4 @@ public class MseLossFunImpl implements LossFun<Double> {
 	public void setDerivative(Matrix derivative) {
 		this.derivative = derivative;
 	}
-	
-	
-	
-	
-	
-
 }

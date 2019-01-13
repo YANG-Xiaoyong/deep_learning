@@ -2,10 +2,12 @@ package org.deeplearning;
 
 import java.util.List;
 
+import org.deeplearning.actveFun.AbstractActiveFun;
+import org.deeplearning.actveFun.ReLUActiveFun;
 import org.deeplearning.layer.AbstractHiddenLayer;
 import org.deeplearning.layer.LinearLayer;
-import org.deeplearning.lossfun.LossFun;
-import org.deeplearning.lossfun.MseLossFunImpl;
+import org.deeplearning.lossfun.AbstractLostFun;
+import org.deeplearning.lossfun.MseLostFun;
 import org.ujmp.core.Matrix;
 
 
@@ -15,6 +17,8 @@ import org.ujmp.core.Matrix;
  *
  */
 public class DeepNetworks {
+	
+	private int runCount = 1;
 
 	/**
 	 * 隐藏层
@@ -25,7 +29,12 @@ public class DeepNetworks {
 	/**
 	 * 损失函数
 	 */
-	private LossFun lossFun;
+	private AbstractLostFun lostFun;
+	
+	/**
+	 * 激活函数
+	 */
+	private AbstractActiveFun activeFun;
 	
 	public boolean statrHiddenLayer(Matrix input) {
 		//System.out.println(input);
@@ -37,21 +46,22 @@ public class DeepNetworks {
 			long count = output.getRowCount();
 			if(nowHiddenLayer instanceof LinearLayer) {
 				output = ((LinearLayer)nowHiddenLayer).setWbRandom(count, count).calculate();
+				((ReLUActiveFun)this.activeFun).invoke(output);
 			}
 			//System.out.println(output);
 		}
-		MseLossFunImpl mseLossFun = ((MseLossFunImpl)this.lossFun);
-		mseLossFun.setResultSet(this.hiddenLayers.get(hiddenLayersSize - 1).getX());
-		double mseResult = mseLossFun.invoke();
+		MseLostFun mseLostFun = ((MseLostFun)this.lostFun);
+		mseLostFun.setResultSet(this.hiddenLayers.get(hiddenLayersSize - 1).getX());
+		double mseResult = mseLostFun.invoke();
 		System.out.println("MSE result：" + mseResult);
-		if(mseResult > mseLossFun.getThreshold()) {
+		if(mseResult > mseLostFun.getThreshold()) {
 			for(int i = hiddenLayersSize - 1; i >= 0; i--) {
 				LinearLayer nowHiddenLayer = (LinearLayer)this.hiddenLayers.get(i);
 				Matrix x = nowHiddenLayer.getX();//y = wx + b，对w逐元素求导，得到x值
 				Matrix derivative = Matrix.Factory.ones(x.getRowCount(), x.getColumnCount());
 				Matrix lastLayerDerivative = null;//上一层的导数
 				if(i == hiddenLayersSize - 1) {
-					lastLayerDerivative = mseLossFun.getDerivative();
+					lastLayerDerivative = mseLostFun.getDerivative();
 				} else {
 					lastLayerDerivative = ((LinearLayer)this.hiddenLayers.get(i + 1)).getDerivative();
 				}
@@ -76,6 +86,7 @@ public class DeepNetworks {
 					
 				}
 			}
+			System.out.println("跑了" + this.runCount++);
 			statrHiddenLayer(input);//继续训练
 			return false;
 		} 
@@ -92,13 +103,20 @@ public class DeepNetworks {
 		this.hiddenLayers = hiddenLayers;
 	}
 
-	public LossFun getLossFun() {
-		return lossFun;
+	public AbstractLostFun getLostFun() {
+		return lostFun;
 	}
 
-	public void setLossFun(LossFun lossFun) {
-		this.lossFun = lossFun;
+	public void setLostFun(AbstractLostFun lostFun) {
+		this.lostFun = lostFun;
 	}
-	
+
+	public AbstractActiveFun getActiveFun() {
+		return activeFun;
+	}
+
+	public void setActiveFun(AbstractActiveFun activeFun) {
+		this.activeFun = activeFun;
+	}
 	
 }
