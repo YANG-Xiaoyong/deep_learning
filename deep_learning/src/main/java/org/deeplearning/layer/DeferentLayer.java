@@ -4,11 +4,11 @@ import org.ujmp.core.Matrix;
 import org.ujmp.core.calculation.Calculation.Ret;
 
 /**
- * 隐藏层
+ * 输出层
  * @author yangxy
  *
  */
-public class LinearLayer extends AbstractHiddenLayer {
+public class DeferentLayer extends AbstractHiddenLayer {
 	
 	/**
 	 * m by n Matrix
@@ -19,6 +19,9 @@ public class LinearLayer extends AbstractHiddenLayer {
 	 * m by 1 Matrix：Vetor
 	 */
 	private Matrix b;
+	
+	
+	
 	
 	@Override
 	public Matrix calculate() {
@@ -32,11 +35,11 @@ public class LinearLayer extends AbstractHiddenLayer {
 	 * @param cols
 	 * @return
 	 */
-	public LinearLayer setWbRandom(long rows, long cols) {
+	public DeferentLayer setWbRandom(long rows, long cols) {
 		if(this.w == null) {
-			this.w = Matrix.Factory.ones(rows, cols);
+			this.w = Matrix.Factory.ones(cols, rows);
 			this.w.randn(Ret.ORIG);
-			this.b = Matrix.Factory.ones(rows, 1);
+			this.b = Matrix.Factory.ones(cols, 1);
 			this.b.randn(Ret.ORIG);
 		}
 		return this;
@@ -60,4 +63,5 @@ public class LinearLayer extends AbstractHiddenLayer {
 	public void setB(Matrix b) {
 		this.b = b;
 	}
+	
 }

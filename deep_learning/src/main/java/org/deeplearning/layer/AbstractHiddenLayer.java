@@ -9,6 +9,18 @@ public abstract class AbstractHiddenLayer {
 	 */
 	public Matrix x;
 	
+	/**
+	 * m by n Matrix：output
+	 */
+	private Matrix y;
+	
+	
+	/**
+	 * m by 1 Matrix：derivative
+	 */
+	private Matrix derivative;
+	
+	
 	public Matrix getX() {
 		return x;
 	}
@@ -17,6 +29,22 @@ public abstract class AbstractHiddenLayer {
 		this.x = x;
 	}
 	
+	public Matrix getY() {
+		return y;
+	}
+
+	public void setY(Matrix y) {
+		this.y = y;
+	}
+
+	public Matrix getDerivative() {
+		return derivative;
+	}
+
+	public void setDerivative(Matrix derivative) {
+		this.derivative = derivative;
+	}
+
 	abstract Matrix calculate();
 	
 }
