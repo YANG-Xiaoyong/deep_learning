@@ -10,15 +10,9 @@ import org.ujmp.core.calculation.Calculation.Ret;
  */
 public class LinearLayer extends AbstractHiddenLayer {
 	
-	/**
-	 * m by n Matrix
-	 */
-	private Matrix w;
-	
-	/**
-	 * m by 1 Matrix：Vetor
-	 */
-	private Matrix b;
+	public LinearLayer(Long width) {
+		super(width);
+	}
 	
 	@Override
 	public Matrix calculate() {
@@ -32,7 +26,14 @@ public class LinearLayer extends AbstractHiddenLayer {
 	 * @param cols
 	 * @return
 	 */
-	public LinearLayer setWbRandom(long rows, long cols) {
+	public LinearLayer setWbRandom(long cols) {
+		if(this.w == null) {
+			this.w = Matrix.Factory.randn(this.width, cols);
+			this.b = Matrix.Factory.randn(this.width, 1);
+		}
+		return this;
+	}
+	/*public LinearLayer setWbRandom(long rows, long cols) {
 		if(this.w == null) {
 			this.w = Matrix.Factory.ones(rows, cols);
 			this.w.randn(Ret.ORIG);
@@ -40,24 +41,5 @@ public class LinearLayer extends AbstractHiddenLayer {
 			this.b.randn(Ret.ORIG);
 		}
 		return this;
-	}
-
-	public Matrix getW() {
-		return w;
-	}
-
-
-	public void setW(Matrix w) {
-		this.w = w;
-	}
-
-
-	public Matrix getB() {
-		return b;
-	}
-
-
-	public void setB(Matrix b) {
-		this.b = b;
-	}
+	}*/
 }

@@ -10,18 +10,6 @@ import org.ujmp.core.calculation.Calculation.Ret;
  */
 public class DeferentLayer extends AbstractHiddenLayer {
 	
-	/**
-	 * m by n Matrix
-	 */
-	private Matrix w;
-	
-	/**
-	 * m by 1 Matrix：Vetor
-	 */
-	private Matrix b;
-	
-	
-	
 	
 	@Override
 	public Matrix calculate() {
@@ -37,31 +25,10 @@ public class DeferentLayer extends AbstractHiddenLayer {
 	 */
 	public DeferentLayer setWbRandom(long rows, long cols) {
 		if(this.w == null) {
-			this.w = Matrix.Factory.ones(cols, rows);
-			this.w.randn(Ret.ORIG);
-			this.b = Matrix.Factory.ones(cols, 1);
-			this.b.randn(Ret.ORIG);
+			this.w = Matrix.Factory.randn(cols, rows);
+			this.b = Matrix.Factory.randn(cols, 1);
 		}
 		return this;
-	}
-
-	public Matrix getW() {
-		return w;
-	}
-
-
-	public void setW(Matrix w) {
-		this.w = w;
-	}
-
-
-	public Matrix getB() {
-		return b;
-	}
-
-
-	public void setB(Matrix b) {
-		this.b = b;
 	}
 	
 }

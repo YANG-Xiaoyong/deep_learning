@@ -1,9 +1,10 @@
 package org.deeplearning;
 
 import java.util.List;
+import java.util.Random;
 
-import org.deeplearning.actveFun.AbstractActiveFun;
-import org.deeplearning.actveFun.ReLUActiveFun;
+import org.deeplearning.activeFun.AbstractActiveFun;
+import org.deeplearning.activeFun.ReLUActiveFun;
 import org.deeplearning.layer.AbstractHiddenLayer;
 import org.deeplearning.layer.DeferentLayer;
 import org.deeplearning.layer.LinearLayer;
@@ -17,7 +18,7 @@ import org.ujmp.core.Matrix;
  * @author upcif003
  *
  */
-public class DeepNetworks {
+public class Networks {
 	
 	private int runCount = 1;
 
@@ -45,14 +46,15 @@ public class DeepNetworks {
 			Matrix output = null;
 			AbstractHiddenLayer nowHiddenLayer = this.hiddenLayers.get(i);
 			if(i == 0) {
-				input = inputs.get(0);
+				Random random = new Random();
+				input = inputs.get(random.nextInt(inputs.size()));
 			} else {
 				input = this.hiddenLayers.get(i-1).getY();
 			}
 			nowHiddenLayer.setX(input);
 			if(nowHiddenLayer instanceof LinearLayer) {
 				long rows = input.getRowCount();
-				output = ((LinearLayer)nowHiddenLayer).setWbRandom(rows, rows).calculate();
+				output = ((LinearLayer)nowHiddenLayer).setWbRandom(rows).calculate();
 			} else if (nowHiddenLayer instanceof DeferentLayer) {
 				long rows = input.getRowCount();
 				long cols = input.getColumnCount();
@@ -60,7 +62,6 @@ public class DeepNetworks {
 			}
 			((ReLUActiveFun)this.activeFun).invoke(output);//激活函数
 			nowHiddenLayer.setY(output);
-			//System.out.println(output);
 		}
 		MseLostFun mseLostFun = ((MseLostFun)this.lostFun);
 		mseLostFun.setResultSet(this.hiddenLayers.get(hiddenLayersSize - 1).getY());
@@ -70,20 +71,27 @@ public class DeepNetworks {
 			for(int i = hiddenLayersSize - 1; i >= 0; i--) {
 				AbstractHiddenLayer nowHiddenLayer = this.hiddenLayers.get(i);
 				Matrix x = nowHiddenLayer.getX();//y = wx + b，对w逐元素求导，得到x值
-				Matrix derivative = Matrix.Factory.ones(x.getRowCount(), x.getColumnCount());
+				Matrix w = nowHiddenLayer.getW();
+				Matrix derivative = Matrix.Factory.zeros(x.getRowCount(), x.getColumnCount());
 				Matrix lastLayerDerivative = null;//上一层的导数
 				if(i == hiddenLayersSize - 1) {
 					lastLayerDerivative = mseLostFun.getDerivative();
-				} else {
-					lastLayerDerivative = ((LinearLayer)this.hiddenLayers.get(i + 1)).getDerivative();
-				}
-				for(int j = 0; j < x.getRowCount(); j++) {
-					for(int k = 0; k < x.getColumnCount(); k++) {
-						double partialDerivativeValue = lastLayerDerivative.getAsDouble(j,0) * x.getAsDouble(j,k);//求偏导值
-						derivative.setAsDouble(partialDerivativeValue, j, k);
+					for(int j = 0; j < lastLayerDerivative.getRowCount(); j++) {
+						for(int k = 0; k < x.getRowCount(); k++) {
+							double partialDerivativeValue = lastLayerDerivative.getAsDouble(j,0) * x.getAsDouble(k,j);//求偏导值
+							derivative.setAsDouble(partialDerivativeValue, k, j);
+						}
 					}
-					//System.out.println("partialDerivativeValue:" + partialDerivativeValue);
+				} else {
+					lastLayerDerivative = this.hiddenLayers.get(i + 1).getDerivative();
+					for(int j = 0; j < lastLayerDerivative.getRowCount(); j++) {
+						for(int k = 0; k < x.getRowCount(); k++) {
+							double partialDerivativeValue = lastLayerDerivative.getAsDouble(j,0) * x.getAsDouble(k,j);//求偏导值
+							derivative.setAsDouble(partialDerivativeValue, k, j);
+						}
+					}
 				}
+				
 				nowHiddenLayer.setDerivative(derivative);
 			}
 			double ϵ = 0.1;

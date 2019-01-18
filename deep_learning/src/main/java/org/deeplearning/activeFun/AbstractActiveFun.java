@@ -1,4 +1,4 @@
-package org.deeplearning.actveFun;
+package org.deeplearning.activeFun;
 
 import org.ujmp.core.Matrix;
 
