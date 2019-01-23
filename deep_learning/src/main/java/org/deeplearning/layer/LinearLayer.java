@@ -10,7 +10,10 @@ import org.ujmp.core.calculation.Calculation.Ret;
  */
 public class LinearLayer extends AbstractHiddenLayer {
 	
-	public LinearLayer(Long width) {
+	public LinearLayer() {
+	}
+	
+	public LinearLayer(Integer width) {
 		super(width);
 	}
 	
@@ -26,19 +29,20 @@ public class LinearLayer extends AbstractHiddenLayer {
 	 * @param cols
 	 * @return
 	 */
-	public LinearLayer setWbRandom(long cols) {
+	public LinearLayer setWbRandom(Integer rows, Integer cols) {
 		if(this.w == null) {
-			this.w = Matrix.Factory.randn(this.width, cols);
+			if (this.width == null) {//输出层
+				this.width = cols;
+			}
+			this.w = Matrix.Factory.randn(this.width, rows);
 			this.b = Matrix.Factory.randn(this.width, 1);
 		}
 		return this;
 	}
-	/*public LinearLayer setWbRandom(long rows, long cols) {
+	/*public LinearLayer setWbRandom(long cols) {
 		if(this.w == null) {
-			this.w = Matrix.Factory.ones(rows, cols);
-			this.w.randn(Ret.ORIG);
-			this.b = Matrix.Factory.ones(rows, 1);
-			this.b.randn(Ret.ORIG);
+			this.w = Matrix.Factory.randn(this.width, cols);
+			this.b = Matrix.Factory.randn(this.width, 1);
 		}
 		return this;
 	}*/

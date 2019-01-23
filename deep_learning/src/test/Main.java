@@ -30,17 +30,18 @@ public class Main {
 	    //设置激活函数
 	    deepNetworks.setActiveFun(activeFun);
 	    //设置测试集
-	    mseLossFun.setTestSet(y);
+	    mseLossFun.setExpectedResult(y);
 	    //设置神经网络层
 	    List<AbstractHiddenLayer> lineLayers = new ArrayList<>();
-	    lineLayers.add(new LinearLayer(7L));
-	    lineLayers.add(new LinearLayer(8L));
-	    lineLayers.add(new LinearLayer(9L));
-	    lineLayers.add(new LinearLayer(10L));
+	    lineLayers.add(new LinearLayer(10));
+	    lineLayers.add(new LinearLayer(3));
+	    lineLayers.add(new LinearLayer(7));
+	    lineLayers.add(new LinearLayer(4));
+	    lineLayers.add(new LinearLayer());
 	    /*for(int i = 0; i < 4; i++) {//添加隐藏层
 	    	lineLayers.add(new LinearLayer(10L));
 	    }*/
-	    lineLayers.add(new DeferentLayer());//添加输出层
+	    //lineLayers.add(new DeferentLayer());//添加输出层
 	    deepNetworks.setHiddenLayers(lineLayers);
 	    //设置损失函数
 	    deepNetworks.setLostFun(mseLossFun);

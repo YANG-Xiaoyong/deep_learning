@@ -15,14 +15,19 @@ public class MseLostFun extends AbstractLostFun {
 	private Double threshold = 0.0001;
 	
 	/**
-	 * m by n Matrix：测试集
+	 * m by n Matrix：预期结果下标
 	 */
-	private Matrix testSet;
+	private Integer[] expectedIndex;
 	
 	/**
-	 * m by n Matrix：结果集
+	 * m by n Matrix：预期结果
 	 */
-	private Matrix resultSet;
+	private Matrix expectedResult;
+	
+	/**
+	 * m by n Matrix：计算结果
+	 */
+	private Matrix computeResult;
 	
 	/**
 	 * m by n Matrix：求导值
@@ -32,32 +37,47 @@ public class MseLostFun extends AbstractLostFun {
 	@Override
 	public Double invoke() {
 		// TODO Auto-generated method stub
-		long count = this.resultSet.getRowCount();
+		long count = this.computeResult.getRowCount();
 		this.derivative = Matrix.Factory.ones(count, 1);
 		
 		double result = 0;
 		for (int i = 0; i < count; i++) {
-			double diff = this.testSet.getAsDouble(i,0) - this.resultSet.getAsDouble(i,0);
+			double diff = this.expectedResult.getAsDouble(expectedIndex[i],0) - this.computeResult.getAsDouble(i,0);
 			result += diff * diff;
 			this.derivative.setAsDouble(-2 * diff/count, i, 0);//设置导数
 		}
 		return result/count;
 	}
+	
+	/*@Override
+	public Double invoke() {
+		// TODO Auto-generated method stub
+		long count = this.computeResult.getRowCount();
+		this.derivative = Matrix.Factory.ones(count, 1);
+		
+		double result = 0;
+		for (int i = 0; i < count; i++) {
+			double diff = this.expectedResult.getAsDouble(i,0) - this.computeResult.getAsDouble(i,0);
+			result += diff * diff;
+			this.derivative.setAsDouble(-2 * diff/count, i, 0);//设置导数
+		}
+		return result/count;
+	}*/
 
-	public Matrix getTestSet() {
-		return testSet;
+	public Matrix getExpectedResult() {
+		return expectedResult;
 	}
 
-	public void setTestSet(Matrix testSet) {
-		this.testSet = testSet;
+	public void setExpectedResult(Matrix expectedResult) {
+		this.expectedResult = expectedResult;
 	}
 
-	public Matrix getResultSet() {
-		return resultSet;
+	public Matrix getComputeResult() {
+		return computeResult;
 	}
 
-	public void setResultSet(Matrix resultSet) {
-		this.resultSet = resultSet;
+	public void setComputeResult(Matrix computeResult) {
+		this.computeResult = computeResult;
 	}
 
 	public Double getThreshold() {
@@ -74,5 +94,13 @@ public class MseLostFun extends AbstractLostFun {
 
 	public void setDerivative(Matrix derivative) {
 		this.derivative = derivative;
+	}
+
+	public Integer[] getExpectedIndex() {
+		return expectedIndex;
+	}
+
+	public void setExpectedIndex(Integer[] expectedIndex) {
+		this.expectedIndex = expectedIndex;
 	}
 }

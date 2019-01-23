@@ -16,7 +16,8 @@ public abstract class AbstractHiddenLayer {
 	
 	
 	/**
-	 * m by 1 Matrix：derivative
+	 * m by n Matrix：derivative
+	 * y derivate x
 	 */
 	public Matrix derivative;
 	
@@ -33,12 +34,12 @@ public abstract class AbstractHiddenLayer {
 	/**
 	 * 宽度
 	 */
-	public Long width;
+	public Integer width;
 	
 	public AbstractHiddenLayer() {
 	}
 	
-	public AbstractHiddenLayer(Long width) {
+	public AbstractHiddenLayer(Integer width) {
 		this.width = width;
 	}
 	
@@ -66,14 +67,6 @@ public abstract class AbstractHiddenLayer {
 		this.derivative = derivative;
 	}
 
-	public long getWidth() {
-		return width;
-	}
-
-	public void setWidth(long width) {
-		this.width = width;
-	}
-
 	public Matrix getW() {
 		return w;
 	}
@@ -88,9 +81,13 @@ public abstract class AbstractHiddenLayer {
 
 	public void setB(Matrix b) {
 		this.b = b;
+	}	
+
+	public Integer getWidth() {
+		return width;
 	}
 
-	public void setWidth(Long width) {
+	public void setWidth(Integer width) {
 		this.width = width;
 	}
 
