@@ -60,7 +60,7 @@ public class Networks {
 			int rows = (int) input.getRowCount();
 			int cols = (int) input.getColumnCount();
 			output = ((LinearLayer)nowHiddenLayer).setWbRandom(rows, cols).calculate();
-			//((ReLUActiveFun)this.activeFun).invoke(output);//激活函数
+			((ReLUActiveFun)this.activeFun).invoke(output);//激活函数
 			nowHiddenLayer.setY(output);
 		}
 		mseLostFun.setComputeResult(this.hiddenLayers.get(hiddenLayersSize - 1).getY());
@@ -71,34 +71,50 @@ public class Networks {
 				AbstractHiddenLayer nowHiddenLayer = this.hiddenLayers.get(i);
 				Matrix x = nowHiddenLayer.getX();//y = wx + b，对w逐元素求导，得到x值
 				Matrix w = nowHiddenLayer.getW();
-				Matrix derivative = Matrix.Factory.zeros(1, x.getColumnCount());
-				Matrix dyw = Matrix.Factory.zeros(w.getRowCount(),w.getColumnCount());//y对w求导再乘以上一层y对x的求导
+				Matrix y = nowHiddenLayer.getY();
 				Matrix lastLayerDerivative = null;//上一层的导数
 				if(i == hiddenLayersSize - 1) {
 					lastLayerDerivative = mseLostFun.getDerivative();
-					/*for(int j = 0; j < lastLayerDerivative.getRowCount(); j++) {
-						for(int k = 0; k < x.getRowCount(); k++) {
-							double partialDerivativeValue = lastLayerDerivative.getAsDouble(j,0) * x.getAsDouble(k,j);//求偏导值
-							derivative.setAsDouble(partialDerivativeValue, k, j);
-						}
-					}*/
 				} else {
 					lastLayerDerivative = this.hiddenLayers.get(i + 1).getDerivative();
-					/*for(int j = 0; j < lastLayerDerivative.getRowCount(); j++) {
-						for(int k = 0; k < x.getRowCount(); k++) {
-							double partialDerivativeValue = lastLayerDerivative.getAsDouble(j,0) * x.getAsDouble(k,j);//求偏导值
-							derivative.setAsDouble(partialDerivativeValue, k, j);
-						}
-					}*/
 				}
-				for(int rows = 0; rows < dyw.getRowCount(); rows++) {
-					for(int cols = 0; cols < dyw.getColumnCount(); cols++) {
-						dyw.setAsDouble(x.getAsDouble(cols,0) * lastLayerDerivative.getAsDouble(0,rows), rows, cols);
+				
+				//计算激活函数的导数
+				Matrix reluDerivative =  Matrix.Factory.zeros(y.getRowCount(), y.getColumnCount());
+				for(int rows = 0; rows < y.getRowCount(); rows++) {
+					for(int cols = 0; cols < y.getColumnCount(); cols++) {
+						if(y.getAsDouble(rows, cols) > 0) {
+							reluDerivative.setAsDouble(1, rows, cols);
+						} else {
+							reluDerivative.setAsDouble(0, rows, cols);
+						}
 					}
 				}
+				
+				//算入激活函数的导数
+				for(int cols = 0; cols < lastLayerDerivative.getColumnCount(); cols++) {
+					lastLayerDerivative.setAsDouble(lastLayerDerivative.getAsDouble(0,cols) * reluDerivative.getAsDouble(cols, 0), 0, cols);
+				}
+				
+				
+				//开始梯度下降
+				double ϵ = 0.1;
+				for(int rows = 0; rows < w.getRowCount(); rows++) {
+					for(int cols = 0; cols < w.getColumnCount(); cols++) {
+						double fallValue = x.getAsDouble(cols,0) * lastLayerDerivative.getAsDouble(0,rows);//x * 上一层的导数
+						if(fallValue > 0) {
+							w.setAsDouble(w.getAsDouble(rows,0) - ϵ * fallValue , rows, cols);
+						} else {
+							w.setAsDouble(w.getAsDouble(rows,0) + ϵ * fallValue , rows, cols);
+						}
+						//dyw.setAsDouble(x.getAsDouble(cols,0) * lastLayerDerivative.getAsDouble(0,rows), rows, cols);
+					}
+				}
+				
+				//设置y对x的导数
 				nowHiddenLayer.setDerivative(lastLayerDerivative.mtimes(w));
 			}
-			double ϵ = 0.1;
+			/*double ϵ = 0.1;
 			for(int i = 0; i < hiddenLayersSize; i++) {//开始梯度下降
 				LinearLayer nowHiddenLayer = (LinearLayer)this.hiddenLayers.get(i);
 				Matrix w = nowHiddenLayer.getW();
@@ -111,7 +127,7 @@ public class Networks {
 					}
 					
 				}
-			}
+			}*/
 			System.out.println("跑了" + this.runCount++);
 			statrHiddenLayer(inputs);//继续训练
 			return false;
