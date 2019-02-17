@@ -1,5 +1,7 @@
 package org.deeplearning.lossfun;
 
+import java.util.List;
+
 import org.ujmp.core.Matrix;
 
 /**
@@ -22,7 +24,7 @@ public class MseLostFun extends AbstractLostFun {
 	/**
 	 * m by n Matrix：预期结果
 	 */
-	private Matrix expectedResult;
+	private List<Matrix> expectedResult;
 	
 	/**
 	 * m by n Matrix：计算结果
@@ -42,7 +44,8 @@ public class MseLostFun extends AbstractLostFun {
 		
 		double result = 0;
 		for (int i = 0; i < count; i++) {
-			double diff = this.expectedResult.getAsDouble(expectedIndex[i],0) - this.computeResult.getAsDouble(i,0);
+			//double diff = this.expectedResult.getAsDouble(expectedIndex[i],0) - this.computeResult.getAsDouble(i,0);
+			double diff = this.expectedResult.get(expectedIndex[i]).getAsDouble(0,0) - this.computeResult.getAsDouble(i,0);
 			result += diff * diff;
 			this.derivative.setAsDouble(-2 * diff/count, i, 0);//设置导数
 		}
@@ -64,11 +67,11 @@ public class MseLostFun extends AbstractLostFun {
 		return result/count;
 	}*/
 
-	public Matrix getExpectedResult() {
+	public List<Matrix> getExpectedResult() {
 		return expectedResult;
 	}
 
-	public void setExpectedResult(Matrix expectedResult) {
+	public void setExpectedResult(List<Matrix> expectedResult) {
 		this.expectedResult = expectedResult;
 	}
 

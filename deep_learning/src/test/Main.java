@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -19,24 +20,33 @@ public class Main {
 			Matrix t = Matrix.Factory.randn(2, 1);//训练数据，把x、y都放在一个维度里
 			x.add(t);
 		}
-	    Matrix y = Matrix.Factory.zeros(x.size(), 1);//测试集
+	    List<Matrix> y = new ArrayList<>();//测试集结果
 	    for (int i = 0; i < x.size(); i++) {
-	    	y.setAsDouble(testFun2(x.get(i).getAsDouble(0, 0), x.get(i).getAsDouble(1,0)), i, 0);
+	    	Matrix result = Matrix.Factory.zeros(1, 1);
+	    	result.setAsDouble(testFun2(x.get(i).getAsDouble(0, 0), x.get(i).getAsDouble(1,0)), 0, 0);
+	    	y.add(result);
 		}
 	    
 	    Networks deepNetworks = new Networks();
 	    MseLostFun mseLossFun = new MseLostFun();
-	    ReLUActiveFun activeFun = new ReLUActiveFun();
+	    ReLUActiveFun activeFun = new ReLUActiveFun();//激活函数放在线性层
 	    //设置激活函数
 	    deepNetworks.setActiveFun(activeFun);
 	    //设置测试集
 	    mseLossFun.setExpectedResult(y);
 	    //设置神经网络层
 	    List<AbstractHiddenLayer> lineLayers = new ArrayList<>();
-	    lineLayers.add(new LinearLayer(10));
+	    //各种异常情况要考虑
+	    /* lineLayers.add(new LinearLayer(10));
 	    lineLayers.add(new LinearLayer(3));
 	    lineLayers.add(new LinearLayer(7));
 	    lineLayers.add(new LinearLayer(4));
+	    lineLayers.add(new LinearLayer(5));
+	    lineLayers.add(new LinearLayer(8));*/
+	    Random random = new Random();
+	    for (int i = 0; i < 100; i++) {
+	    	lineLayers.add(new LinearLayer(random.nextInt(10) + 1));
+		}
 	    lineLayers.add(new LinearLayer());
 	    /*for(int i = 0; i < 4; i++) {//添加隐藏层
 	    	lineLayers.add(new LinearLayer(10L));
@@ -46,7 +56,7 @@ public class Main {
 	    //设置损失函数
 	    deepNetworks.setLostFun(mseLossFun);
 	    
-	    while(deepNetworks.statrHiddenLayer(x)) {
+	    while(!deepNetworks.statrHiddenLayer(x)) {
 	    }    
 	}
 	

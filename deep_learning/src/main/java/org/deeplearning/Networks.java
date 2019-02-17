@@ -72,6 +72,7 @@ public class Networks {
 				Matrix x = nowHiddenLayer.getX();//y = wx + b，对w逐元素求导，得到x值
 				Matrix w = nowHiddenLayer.getW();
 				Matrix y = nowHiddenLayer.getY();
+				Matrix b = nowHiddenLayer.getB();
 				Matrix lastLayerDerivative = null;//上一层的导数
 				if(i == hiddenLayersSize - 1) {
 					lastLayerDerivative = mseLostFun.getDerivative();
@@ -97,7 +98,7 @@ public class Networks {
 				}
 				
 				
-				//开始梯度下降
+				//开始w的梯度下降
 				double ϵ = 0.1;
 				for(int rows = 0; rows < w.getRowCount(); rows++) {
 					for(int cols = 0; cols < w.getColumnCount(); cols++) {
@@ -108,6 +109,16 @@ public class Networks {
 							w.setAsDouble(w.getAsDouble(rows,0) + ϵ * fallValue , rows, cols);
 						}
 						//dyw.setAsDouble(x.getAsDouble(cols,0) * lastLayerDerivative.getAsDouble(0,rows), rows, cols);
+					}
+				}
+				
+				//开始b的梯度下降
+				for(int rows = 0; rows < b.getRowCount(); rows++) {
+					double fallValue = lastLayerDerivative.getAsDouble(0,rows);//1 * 上一层的导数
+					if(fallValue > 0) {
+						b.setAsDouble(b.getAsDouble(rows,0) - ϵ * fallValue , rows, 0);
+					} else {
+						b.setAsDouble(b.getAsDouble(rows,0) + ϵ * fallValue , rows, 0);
 					}
 				}
 				
@@ -129,10 +140,10 @@ public class Networks {
 				}
 			}*/
 			System.out.println("跑了" + this.runCount++);
-			statrHiddenLayer(inputs);//继续训练
+			//statrHiddenLayer(inputs);//继续训练
 			return false;
 		} 
-		return true;
+		return false;
 			
 		
 	}
