@@ -17,7 +17,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		List<Matrix> x = new ArrayList<Matrix>();
 		for(int i = 0; i < 1000; i++) {
-			Matrix t = Matrix.Factory.randn(2, 1);//训练数据，把x、y都放在一个维度里
+			Matrix t = Matrix.Factory.randn(2, 1);//训练数据
 			x.add(t);
 		}
 	    List<Matrix> y = new ArrayList<>();//测试集结果
@@ -56,8 +56,7 @@ public class Main {
 	    //设置损失函数
 	    deepNetworks.setLostFun(mseLossFun);
 	    
-	    while(!deepNetworks.statrHiddenLayer(x)) {
-	    }    
+	    deepNetworks.startTrain(x);
 	}
 	
 	/**
