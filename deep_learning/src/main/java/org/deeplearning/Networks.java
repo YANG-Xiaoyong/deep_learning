@@ -61,7 +61,7 @@ public class Networks {
 				int rows = (int) input.getRowCount();
 				int cols = (int) input.getColumnCount();
 				output = ((LinearLayer)nowHiddenLayer).setWbRandom(rows, cols).calculate();
-				((ReLUActiveFun)this.activeFun).invoke(output);//激活函数
+				this.activeFun.calculateResult(output);//激活函数
 				nowHiddenLayer.setY(output);
 			}
 			mseLostFun.setComputeResult(this.hiddenLayers.get(hiddenLayersSize - 1).getY());
@@ -83,7 +83,8 @@ public class Networks {
 
 					//计算激活函数的导数
 					Matrix reluDerivative =  Matrix.Factory.zeros(y.getRowCount(), y.getColumnCount());
-					for(int rows = 0; rows < y.getRowCount(); rows++) {
+					this.activeFun.calculateDerivative(reluDerivative, y);
+					/*for(int rows = 0; rows < y.getRowCount(); rows++) {
 						for(int cols = 0; cols < y.getColumnCount(); cols++) {
 							if(y.getAsDouble(rows, cols) > 0) {
 								reluDerivative.setAsDouble(1, rows, cols);
@@ -91,7 +92,7 @@ public class Networks {
 								reluDerivative.setAsDouble(0, rows, cols);
 							}
 						}
-					}
+					}*/
 
 					//算入激活函数的导数
 					for(int cols = 0; cols < lastLayerDerivative.getColumnCount(); cols++) {
@@ -142,7 +143,8 @@ public class Networks {
 				}*/
 				System.out.println("跑了" + this.runCount++);
 			} else {
-				break;
+				System.out.println("AA");
+				//break;
 			}
 		}
 	}

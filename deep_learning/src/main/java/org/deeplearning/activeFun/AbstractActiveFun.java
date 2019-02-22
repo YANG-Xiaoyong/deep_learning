@@ -4,6 +4,8 @@ import org.ujmp.core.Matrix;
 
 public abstract class AbstractActiveFun {
 	
-	abstract void invoke(Matrix resultSet);
+	public abstract void calculateResult(Matrix resultSet);
+	
+	public abstract void calculateDerivative(Matrix reluDerivative, Matrix resultSet);
 	
 }
