@@ -33,7 +33,7 @@ public class Main {
 	    ReLUActiveFun activeFun = new ReLUActiveFun();//激活函数放在线性层
 	    IdenticalActiveFun identicalActiveFun = new IdenticalActiveFun();//恒等函数放在线性层
 	    //设置激活函数
-	    deepNetworks.setActiveFun(activeFun);
+	    deepNetworks.setActiveFun(identicalActiveFun);
 	    //设置测试集
 	    mseLossFun.setExpectedResult(y);
 	    //设置神经网络层
@@ -47,13 +47,9 @@ public class Main {
 	    lineLayers.add(new LinearLayer(8));*/
 	    Random random = new Random();
 	    for (int i = 0; i < 1; i++) {
-	    	lineLayers.add(new LinearLayer(random.nextInt(10) + 1));
+	    	//lineLayers.add(new LinearLayer(random.nextInt(10) + 1));
 		}
 	    lineLayers.add(new LinearLayer());
-	    /*for(int i = 0; i < 4; i++) {//添加隐藏层
-	    	lineLayers.add(new LinearLayer(10L));
-	    }*/
-	    //lineLayers.add(new DeferentLayer());//添加输出层
 	    deepNetworks.setHiddenLayers(lineLayers);
 	    //设置损失函数
 	    deepNetworks.setLostFun(mseLossFun);

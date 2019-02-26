@@ -106,9 +106,9 @@ public class Networks {
 						for(int cols = 0; cols < w.getColumnCount(); cols++) {
 							double fallValue = x.getAsDouble(cols,0) * lastLayerDerivative.getAsDouble(0,rows);//x * 上一层的导数
 							if(fallValue > 0) {
-								w.setAsDouble(w.getAsDouble(rows,0) - ϵ * fallValue , rows, cols);
+								w.setAsDouble(w.getAsDouble(rows,cols) - ϵ * fallValue , rows, cols);
 							} else {
-								w.setAsDouble(w.getAsDouble(rows,0) + ϵ * fallValue , rows, cols);
+								w.setAsDouble(w.getAsDouble(rows,cols) + ϵ * fallValue , rows, cols);
 							}
 							//dyw.setAsDouble(x.getAsDouble(cols,0) * lastLayerDerivative.getAsDouble(0,rows), rows, cols);
 						}
@@ -144,7 +144,7 @@ public class Networks {
 				System.out.println("跑了" + this.runCount++);
 			} else {
 				System.out.println("AA");
-				//break;
+				break;
 			}
 		}
 	}
